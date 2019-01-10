@@ -36,7 +36,10 @@ We can also remove che-data if needed
 
 Finally run docker
 
-> docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock -v /media/luyenchu/Data/Impls/Projects/IntegrationPlatforms/EclipseChe/extensions/che-plugin-embedjs/assembly/assembly-main/target/eclipse-che-6.17.0-SNAPSHOT/eclipse-che-6.17.0-SNAPSHOT:/assembly -v /home/luyenchu/Documents/che-data-9001:/data -e CHE_PORT=9001 eclipse/che:6.16.0 start --skip:scripts
+> docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd)/assembly/assembly-main/target/eclipse-che-6.17.0-SNAPSHOT/eclipse-che-6.17.0-SNAPSHOT:/assembly -v ~/che-data/che-data-9001:/data -e CHE_PORT=9001 eclipse/che:6.16.0 start --skip:scripts
+
+sudo ifconfig lo0 alias $IP (CHE_HOST)
+> sudo ifconfig lo0 alias 192.168.65.2
 
 3. Knowledge
 ---
