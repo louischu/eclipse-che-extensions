@@ -1,0 +1,75 @@
+
+
+0. Set hostname
+> sudo vi /etc/hosts
+	10.61.11.43 proxyvitm01
+
+## Lưu ý: nếu là dùng Ubuntu: set proxy trong phần networks, sẽ có các evenvironment proxy (http-proxy, https-proxy); Nên đa phần không cần đặt lại
+1. Git proxy
+	> git config --global http.proxy http://10.61.11.43:3128
+	> git config --global https.proxy http://10.61.11.43:3128
+
+2. Maven proxy
+	<settings>
+	<proxies>
+	<proxy>
+	  <id>proxy-1</id>
+	  <active>true</active>
+	  <protocol>http</protocol>
+	  <host>proxyvitm01</host>
+	  <port>3128</port>
+	  <nonProxyHosts>www.google.com|*.example.com</nonProxyHosts>
+	</proxy>
+	<proxy>
+	  <id>proxy-2</id>
+	  <active>true</active>
+	  <protocol>http2</protocol>
+	  <host>proxyvitm01</host>
+	  <port>3128</port>
+	  <nonProxyHosts>www.google.com|*.example.com</nonProxyHosts>
+	</proxy>
+	</proxies>
+	</settings>
+
+
+3. Proxy docker
+	> For use inside docker:
+	https://docs.docker.com/network/proxy/
+	vi ~/.docker/config.json
+{
+ "proxies":
+ {
+   "default":
+   {
+     "httpProxy": "http://10.61.11.43:3128",
+     "httpsProxy": "http://10.61.11.43:3128",
+     "noProxy": "*.viettel.vn,10.61.186.105,127.0.0.1"
+   }
+ }
+}
+
+	> For Build/Create image
+	https://docs.docker.com/config/daemon/systemd/#httphttps-proxy
+
+	vi /etc/systemd/system/docker.service.d/http-proxy.conf
+
+	[Service]
+	Environment="HTTP_PROXY=http://10.61.11.43:3128/" "HTTPS_PROXY=http://10.61.11.43:3128/" "NO_PROXY=localhost,127.0.0.0/8,10.0.0.0/8"
+	~
+
+	sudo systemctl daemon-reload
+	sudo systemctl restart docker
+	systemctl show --property=Environment docker
+
+4. Some docker commands
+
+docker container ls -a
+docker container stop [id]
+docker container rm id/name - remove created container
+docker image ls - show all images
+docker rmi id - remove images
+docker rmi $(docker images -a -q) - remove all images
+docker ps - show running container
+docker stop id - stop running container
+docker kill $(docker ps -q) - kill all running containers
+docker rm $(docker ps -a -q) - delete all stopped containers
