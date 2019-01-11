@@ -14,29 +14,40 @@ Super dev-mode
 > https://github.com/che-samples
 ### **1. Menu**
 ### **2. EmbedJS**
+
 0. Create Project
 > git clone https://github.com/che-samples/che-plugin-embedjs.git
+
 1. Build
-* **First time**
+
+**First time**
+
 > mvn -T 4C -DskipTests -Dskip-validate-sources clean install
-* **Super dev mode**
+
+> mvn -T 8C -DskipTests -Dskip-validate-sources clean install
+
+**Super dev mode**
 > mvn gwt:codeserver -pl :assembly-ide-war -am -Dmaven.main.skip -Dmaven.resources.skip -Dche.dto.skip -Dskip-enforce -Dskip-validate-sources
 2. Run
 
 Asume loading javascript from external source:
-> cd /media/luyenchu/Data/Impls/Projects/IntegrationPlatforms/EclipseChe/extensions/che-plugin-embedjs/plugins/plugin-embedjs/plugin-embedjs-ide/src/main/resources/org/eclipse/che/sample/public
+> cd $(pwd)/plugin-embedjs-ide/src/main/resources/org/eclipse/che/sample/public
 
 > python -m SimpleHTTPServer 8000
+> 
+> python -m servit.py 8000
 
 *Then set URI for javascript in Presenter class*
 
 We can also remove che-data if needed
 
-> sudo rm -rf ~/Documents/che-data/che-data-9001/*
+> mkdir ~/che-data
+> 
+> sudo rm -rf ~/che-data/che-data-9001/*
 
 Finally run docker
 
-> docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd)/assembly/assembly-main/target/eclipse-che-6.17.0-SNAPSHOT/eclipse-che-6.17.0-SNAPSHOT:/assembly -v ~/che-data/che-data-9001:/data -e CHE_PORT=9001 eclipse/che:6.16.0 start --skip:scripts
+> docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd)/assembly/assembly-main/target/eclipse-che-6.17.0-SNAPSHOT/eclipse-che-6.17.0-SNAPSHOT:/assembly -v ~/che-data/che-data-9001:/data -e CHE_PORT=9001 -e CHE_DOCKER_IP_EXTERNAL=35.198.236.222 eclipse/che:6.16.0 start --skip:scripts
 
 sudo ifconfig lo0 alias $IP (CHE_HOST)
 > sudo ifconfig lo0 alias 192.168.65.2
