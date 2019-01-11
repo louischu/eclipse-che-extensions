@@ -41,13 +41,29 @@ Asume loading javascript from external source:
 
 We can also remove che-data if needed
 
-> mkdir ~/che-data
+> mkdir /chedata/*
 > 
-> sudo rm -rf ~/che-data/che-data-9001/*
+> and chown if needed
+> 
+> sudo chmod 777 -R /chedata
+> 
+> sudo rm -rf /chedata/*
 
 Finally run docker
 
-> docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd)/assembly/assembly-main/target/eclipse-che-6.17.0-SNAPSHOT/eclipse-che-6.17.0-SNAPSHOT:/assembly -v ~/che-data/che-data-9001:/data -e CHE_PORT=9001 -e CHE_DOCKER_IP_EXTERNAL=35.198.236.222 eclipse/che:6.16.0 start --skip:scripts
+> Single user:
+> 
+> docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd)/assembly/assembly-main/target/eclipse-che-6.17.0-SNAPSHOT/eclipse-che-6.17.0-SNAPSHOT:/assembly -v ~/che-data/che-data-9001:/data -e CHE_PORT=9001 eclipse/che:6.16.0 start --skip:scripts
+> 
+> Multiple users:
+> 
+> export EXTERNAL_IP=35.198.236.222
+> 
+> docker run -it --rm -e CHE_MULTIUSER=true -e CHE_HOST=${EXTERNAL_IP} -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd)/assembly/assembly-main/target/eclipse-che-6.17.0-SNAPSHOT/eclipse-che-6.17.0-SNAPSHOT:/assembly -v /chedata/che-multiuser-9001:/data eclipse/che:6.16.0 start --skip:scripts
+> 
+> **No custom assembly:**
+> 
+> sudo docker run -it --rm -e CHE_MULTIUSER=true -e CHE_HOST=${EXTERNAL_IP} -v /var/run/docker.sock:/var/run/docker.sock -v /chedata/che-multiuser-1:/data eclipse/che:6.16.0 start --skip:scripts
 
 sudo ifconfig lo0 alias $IP (CHE_HOST)
 > sudo ifconfig lo0 alias 192.168.65.2

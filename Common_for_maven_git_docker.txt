@@ -73,3 +73,9 @@ docker ps - show running container
 docker stop id - stop running container
 docker kill $(docker ps -q) - kill all running containers
 docker rm $(docker ps -a -q) - delete all stopped containers
+
+
+
+
+
+......
